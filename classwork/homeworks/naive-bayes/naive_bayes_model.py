@@ -85,3 +85,24 @@ def count_words_per_category(bags: dict[str, dict[str, int]]) -> dict[str, int]:
       category_to_word_counts[category] += count
     
   return category_to_word_counts
+
+
+def likelihood_laplace_smoothing(
+  word: str,
+  bag: dict,
+  total_words_in_class: int,
+  vocabulary_size: int
+) -> float:
+    """Calculates the probability of a word given a category using Laplace smoothing.
+
+    Args:
+      word (str): The word to calculate the probability for.
+      bag (dict): The word-count dictionary for a specific category.
+      total_words_in_class (int): The total number of words in that category.
+      vocabulary_size (int): The size of the vocabulary.
+
+    Returns:
+        float: The smoothed probability of the word given the category.
+    """
+    word_count_in_class = bag.get(word, 0)
+    return (word_count_in_class + 1) / (total_words_in_class + vocabulary_size)
