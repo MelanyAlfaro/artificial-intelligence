@@ -86,7 +86,7 @@ def create_bag_of_words(lyrics: list) -> dict:
 
 def save_bag_of_words(bags: dict, output_path : str) -> None:
     """
-    Save the bag of words representation to a file. It's usage 
+    Save the bag of words representation to a file. Its usage 
     is optional, but it can be useful to save the bag of words for later use.
 
     Returns:
