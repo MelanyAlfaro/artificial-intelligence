@@ -65,11 +65,11 @@ def remove_unknown_words(test_set: str, vocabulary: set) -> str:
   return " ".join(cleaned_test_set)
 
 
-def count_words_per_category(category_to_lyrics: dict[str, list[str]]) -> dict[str, int]:
+def count_words_per_category(bags: dict[str, dict[str, int]]) -> dict[str, int]:
   """Counts how many words are in each category
 
   Args:
-    category_to_lyrics (dict[str, list[str]]): Dict associating categories to their lyrics
+    bags (dict[str, dict[str, int]]): Dict associating categories to counts per word
 
   Returns:
     dict[str, int]: Categories associated to the amount of words they have
@@ -77,11 +77,11 @@ def count_words_per_category(category_to_lyrics: dict[str, list[str]]) -> dict[s
   category_to_word_counts: dict[str, int] = dict()
   
   # For each category
-  for category, lyrics in category_to_lyrics.items():
+  for category, bag in bags.items():
     category_to_word_counts[category] = 0
-
-    # For each lyric row, add to counter how many words there are
-    for lyric in lyrics:
-      category_to_word_counts[category] += len(lyric.split())
+    
+    # Sum the counts per word
+    for count in bag.values():
+      category_to_word_counts[category] += count
     
   return category_to_word_counts
