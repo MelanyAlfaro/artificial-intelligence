@@ -28,7 +28,7 @@ def load_lyrics(file_path: str) -> list:
           continue
 
         category = row["CATEGORIA"].strip()
-        # Grab whichever colum isn't CATEGORIA, so this still works if the lyrics column is renamed
+        # Grab whichever column isn't CATEGORIA, so this still works if the lyrics column is renamed
         lyrics_key = next (key for key in row if key != "CATEGORIA")
         lyrics_text = row[lyrics_key]
 
