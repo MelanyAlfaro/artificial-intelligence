@@ -1,4 +1,5 @@
 from collections import defaultdict
+import math
 
 def map_lyrics_to_categories(
   lyrics: list[tuple[str, str]]
@@ -41,15 +42,15 @@ def calculate_priors(
     return priors
 
 
-def remove_unknown_words(test_set: str, vocabulary: set) -> str:
-  """Removes unknown words from a test set
+def clean_test_set(test_set: str, vocabulary: set) -> list[str]:
+  """Removes unknown words from a test set and returns as separated list of words
 
   Args:
       test_set (str): The test set to clean
       vocabulary (set): The words in the corpus
 
   Returns:
-      str: The test set without unknown words
+      list[str]: The test set without unknown words, separated by words in a list
   """
   # Split the test set by any whitespaces into the words
   test_set_words = test_set.split()
@@ -62,7 +63,7 @@ def remove_unknown_words(test_set: str, vocabulary: set) -> str:
       cleaned_test_set.append(word)
 
   # Reconstruct into string
-  return " ".join(cleaned_test_set)
+  return cleaned_test_set
 
 
 def count_words_per_category(bags: dict[str, dict[str, int]]) -> dict[str, int]:
@@ -106,3 +107,56 @@ def likelihood_laplace_smoothing(
     """
     word_count_in_class = bag.get(word, 0)
     return (word_count_in_class + 1) / (total_words_in_class + vocabulary_size)
+  
+  
+def classify_with_bayes(
+  vocabulary: set, 
+  bags: dict[str, dict[str, int]],
+  category_to_lyrics: dict[str, list[str]],
+  test_set: str
+) -> tuple[str, float]:
+  """Classifies the category that a test set belongs to using Naive Bayes with Laplace Smoothing
+
+  Args:
+    vocabulary (set): The unique words in the corpus
+    bags (dict[str, dict[str, int]]): Categories associated to counts of appearances by words 
+    category_to_lyrics: dict[str, list[str]]: Categories associated with the lyrics that belong to it
+    test_set (str): The sentence to classify. Must be normalized before passing to the function
+
+  Returns:
+    tuple[str, float]: Name of the class that the test set is classified to and the calculated probability
+  """
+  # First remove unknown words to clean
+  cleaned_test_set: list[str] = clean_test_set(test_set, vocabulary)
+  
+  # Stores the likelihood of the test set per category for final decision
+  category_to_likelihood: dict[str, float] = dict()
+    
+  # Calculate prior probabilities per category
+  priors: dict[str, float] = calculate_priors(category_to_lyrics)
+  
+  # Obtain the word counts per category using bags
+  category_to_word_counts: dict[str, int] = count_words_per_category(bags)
+  
+  # Calculate likelihoods of the test set per category
+  for current_category in bags:
+    current_bag = bags[current_category]
+    current_prior = priors[current_category]
+    current_word_count = category_to_word_counts[current_category]
+    
+    # Start likelihood with log of current prior to sum other log of probabilities
+    current_likelihood = math.log(current_prior)
+    
+    for word in cleaned_test_set:
+      current_likelihood += math.log(likelihood_laplace_smoothing(word, current_bag, current_word_count, len(vocabulary)))
+    
+    # Store final likelihood for current category
+    category_to_likelihood[current_category] = current_likelihood
+
+  # Select category with highest likelihood
+  classified_category = max(
+    category_to_likelihood,
+    key=category_to_likelihood.get
+  )
+
+  return classified_category, category_to_likelihood[classified_category]
