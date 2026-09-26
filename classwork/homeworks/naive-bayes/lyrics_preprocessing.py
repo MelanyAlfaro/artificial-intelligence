@@ -63,7 +63,7 @@ def preprocess_lyrics(lyrics: str) -> str:
     return text
 
   
-def create_bag_of_words(lyrics: list) -> dict:
+def create_bag_of_words(lyrics: list[tuple[str, str]]) -> dict[str, dict[str, int]]:
     """
     Create a bag of words representation from the preprocessed lyrics.
 
