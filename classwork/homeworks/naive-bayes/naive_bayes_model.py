@@ -42,7 +42,7 @@ def calculate_priors(
     return priors
 
 
-def clean_test_set(test_set: str, vocabulary: set) -> list[str]:
+def process_test_set(test_set: str, vocabulary: set) -> list[str]:
   """Removes unknown words from a test set and returns as separated list of words
 
   Args:
@@ -55,15 +55,15 @@ def clean_test_set(test_set: str, vocabulary: set) -> list[str]:
   # Split the test set by any whitespaces into the words
   test_set_words = test_set.split()
 
-  cleaned_test_set = []
+  processed_test_set = []
 
   # Only leave known words in the clean test set
   for word in test_set_words:
     if word in vocabulary:
-      cleaned_test_set.append(word)
+      processed_test_set.append(word)
 
   # Reconstruct into string
-  return cleaned_test_set
+  return processed_test_set
 
 
 def count_words_per_category(bags: dict[str, dict[str, int]]) -> dict[str, int]:
@@ -127,7 +127,7 @@ def classify_with_bayes(
     tuple[str, float]: Name of the class that the test set is classified to and the calculated probability
   """
   # First remove unknown words to clean
-  cleaned_test_set: list[str] = clean_test_set(test_set, vocabulary)
+  processed_test_set: list[str] = process_test_set(test_set, vocabulary)
   
   # Stores the likelihood of the test set per category for final decision
   category_to_likelihood: dict[str, float] = dict()
@@ -147,7 +147,7 @@ def classify_with_bayes(
     # Start likelihood with log of current prior to sum other log of probabilities
     current_likelihood = math.log(current_prior)
     
-    for word in cleaned_test_set:
+    for word in processed_test_set:
       current_likelihood += math.log(likelihood_laplace_smoothing(word, current_bag, current_word_count, len(vocabulary)))
     
     # Store final likelihood for current category
