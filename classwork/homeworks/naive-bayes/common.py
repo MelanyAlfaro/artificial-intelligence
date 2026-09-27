@@ -4,6 +4,9 @@
 import csv
 
 
+Category = str
+
+
 def load_lyrics(file_path: str) -> list:
     """
     Load lyrics from CSV file 
