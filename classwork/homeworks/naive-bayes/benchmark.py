@@ -9,17 +9,17 @@ import statistics as stat
 def show_results(metrics: dict[Category, dict[Metric, float]]) -> None:
   all_metrics: dict[Metric, list[float]] = defaultdict(list[float])
   print()
-print(f'{"=" * (30 + len("Results"))}')
-print(f'{"Results":>{30 // 2 + len("Results")}}')
-print(f'{"=" * (30 + len("Results"))}')
+  print(f'{"=" * (30 + len("Results"))}')
+  print(f'{"Results":>{30 // 2 + len("Results")}}')
+  print(f'{"=" * (30 + len("Results"))}')
   print("Values per category:")
   col_widths = [12, 12, 12]
-  col_precicions = [10]
+  col_precisions = [10]
   print(f"{"Category":{col_widths[0]}}{"Field":{col_widths[1]}}{"Value":{col_widths[2]}}")
   for cat, cat_metric in metrics.items():
     for metric, value in cat_metric.items():
       all_metrics[metric].append(value)
-      print(f"{cat:{col_widths[0]}}{metric:{col_widths[1]}}{value:<0{col_widths[2]}.{col_precicions[0]}}")
+      print(f"{cat:{col_widths[0]}}{metric:{col_widths[1]}}{value:<0{col_widths[2]}.{col_precisions[0]}}")
 
   mean_metrics: dict[Metric, float] = dict[Metric, float]()
   for metric, values in all_metrics.items():
@@ -27,10 +27,10 @@ print(f'{"=" * (30 + len("Results"))}')
   print()
   print("Means:")
   col_widths = [12, 12]
-  col_precicions = [10]
+  col_precisions = [10]
   print(f"{"Field":{col_widths[0]}}{"Mean":{col_widths[1]}}")
   for metric, mean_value in mean_metrics.items():
-    print(f"{metric:{col_widths[0]}}{mean_value:<0{col_widths[1]}.{col_precicions[0]}}")
+    print(f"{metric:{col_widths[0]}}{mean_value:<0{col_widths[1]}.{col_precisions[0]}}")
 
 
 def benchmark(training: str, testing: str) -> None:
