@@ -2,8 +2,7 @@ import math
 from collections import defaultdict
 from vocabulary import extract_vocabulary
 from lyrics_preprocessing import create_bag_of_words
-
-Category = str
+from common import Category
 
 class NaiveBayesModel:
   def __init__(
