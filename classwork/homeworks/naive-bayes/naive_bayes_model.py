@@ -15,8 +15,8 @@ class NaiveBayesModel:
 
     self._vocabulary: set[str] = extract_vocabulary(bags)
     self._likelihood_logs: dict[str, dict[Category, float]] = defaultdict(dict)
-    self._categories: set[Category] = set[Category]()
-    self._categories.add(cat for cat in bags.keys())
+    self.categories: set[Category] = set[Category]()
+    self.categories.add(cat for cat in bags.keys())
     self._priors: dict[Category, float] = self._calculate_priors(cat_to_training_sets)
     self._train(bags)
 
@@ -56,7 +56,7 @@ class NaiveBayesModel:
     scores: dict[Category, float] = {}
     # Calculate the score per category
     # Use logarithms to keep the numbers small and work with addition
-    for cat in self._categories:
+    for cat in self.categories:
       scores[cat] = math.log(self._priors[cat])
       for word in processed_test_set:
         scores[cat] += self._likelihood_logs[word][cat]
