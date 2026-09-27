@@ -62,7 +62,7 @@ class NaiveBayesModel:
 
     # Iterate over scores (keys) and compare based on the value
     # (using the method 'get')
-    return max(iterable=scores, key=scores.get)
+    return max(scores, key=scores.get)
 
 
   def _process_test_set(self, test_set: str) -> list[str]:
