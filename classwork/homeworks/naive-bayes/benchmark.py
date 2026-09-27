@@ -9,9 +9,9 @@ import statistics as stat
 def show_results(metrics: dict[Category, dict[Metric, float]]) -> None:
   all_metrics: dict[Metric, list[float]] = defaultdict(list[float])
   print()
-  print(f"{"=" * (30 + len("Results"))}")
-  print(f"{"Results":>{30 // 2 + len("Results")}}")
-  print(f"{"=" * (30 + len("Results"))}")
+print(f'{"=" * (30 + len("Results"))}')
+print(f'{"Results":>{30 // 2 + len("Results")}}')
+print(f'{"=" * (30 + len("Results"))}')
   print("Values per category:")
   col_widths = [12, 12, 12]
   col_precicions = [10]
