@@ -1,8 +1,10 @@
 import math
 from collections import defaultdict
-from vocabulary import extract_vocabulary
-from lyrics_preprocessing import create_bag_of_words
+
 from common import Category
+from lyrics_preprocessing import create_bag_of_words
+from vocabulary import extract_vocabulary
+
 
 class NaiveBayesModel:
   def __init__(
@@ -16,7 +18,7 @@ class NaiveBayesModel:
     self._vocabulary: set[str] = extract_vocabulary(bags)
     self._likelihood_logs: dict[str, dict[Category, float]] = defaultdict(dict)
     self.categories: set[Category] = set[Category]()
-    self.categories.add(cat for cat in bags.keys())
+    self.categories.update(bags.keys())
     self._priors: dict[Category, float] = self._calculate_priors(cat_to_training_sets)
     self._train(bags)
 

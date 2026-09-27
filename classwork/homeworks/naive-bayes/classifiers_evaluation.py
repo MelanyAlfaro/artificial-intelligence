@@ -4,6 +4,7 @@ accuracy, precision, recall, and f1. It also has a function for calculating all 
 """
 
 from common import Category
+from lyrics_preprocessing import preprocess_lyrics
 from naive_bayes_model import NaiveBayesModel
 
 Metric = str
@@ -15,19 +16,31 @@ def calculate_accuracy(
   false_negatives: int
 ) -> float:
   """Returns accuracy (Proportion of predictions correct overall)"""
-  return (true_positives + true_negatives) / (true_positives + true_negatives + false_positives + false_negatives)
+  try:
+    return (true_positives + true_negatives) / (true_positives + true_negatives + false_positives + false_negatives)
+  except ZeroDivisionError:
+    return 0.0
 
 def calculate_precision(true_positives: int, false_positives) -> float:
   """Returns precision (Proportion of the predicted positives that were actually positive)"""
-  return true_positives / (true_positives + false_positives)
+  try:
+    return true_positives / (true_positives + false_positives)
+  except ZeroDivisionError:
+    return 0.0
 
 def calculate_recall(true_positives: int, false_negatives: int) -> float:
   """Returns recall (Proportion of real positives that were correctly identified)"""
-  return true_positives / (true_positives + false_negatives)
+  try:   
+    return true_positives / (true_positives + false_negatives)
+  except ZeroDivisionError:
+    return 0.0
 
 def calculate_f1(precision: float, recall: float) -> float:
   """Calculates f1 (Harmonic mean of precision and recall)"""
-  return 2 * (precision * recall) / (precision + recall)
+  try:
+    return 2 * (precision * recall) / (precision + recall)
+  except ZeroDivisionError:
+    return 0.0
 
 def evaluate_bayes_model(
   naive_bayes_model: NaiveBayesModel,
@@ -55,7 +68,8 @@ def evaluate_bayes_model(
   true_negatives: int = 0
 
   for category, test_set in test_sets:
-    classified_cat = naive_bayes_model.classify(test_set)
+    clean_test_set = preprocess_lyrics(test_set)
+    classified_cat = naive_bayes_model.classify(clean_test_set)
     
     # True positive
     if category == target_category and classified_cat == target_category:
