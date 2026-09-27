@@ -15,8 +15,7 @@ class NaiveBayesModel:
 
     self._vocabulary: set[str] = extract_vocabulary(bags)
     self._likelihood_logs: dict[str, dict[Category, float]] = defaultdict(dict)
-    self._categories: set[Category] = {}
-    self._categories.add(cat for cat in bags.keys())
+    self._categories: set[Category] = set(bags.keys())
     self._priors: dict[Category, float] = self._calculate_priors(cat_to_training_sets)
     self._train(bags)
 
