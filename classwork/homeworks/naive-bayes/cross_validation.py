@@ -1,9 +1,5 @@
 import random
 
-from common import load_lyrics
-from lyrics_preprocessing import preprocess_lyrics
-from naive_bayes_model import classify_with_bayes, map_lyrics_to_categories
-
 
 def k_fold_split(
     lyrics_by_category: dict[str, list[str]], k: int = 5, seed: int | None = None
@@ -47,40 +43,3 @@ def k_fold_split(
                 folds[i].append((category, single_lyric))
 
     return folds
-
-
-# TESTING CODE
-if __name__ == "__main__":
-    lyrics_by_category = map_lyrics_to_categories(load_lyrics("data/training-lyrics.csv"))
-
-    print("=== Original data ===")
-    total_songs = sum(len(lyrics) for lyrics in lyrics_by_category.values())
-    for category, lyrics in lyrics_by_category.items():
-        proportion = len(lyrics) / total_songs
-        print(f"  {category}: {len(lyrics)} songs ({proportion:.1%})")
-    print(f"  TOTAL: {total_songs} songs\n")
-
-    folds = k_fold_split(lyrics_by_category, k=5, seed=42)
-
-    print(f"=== Created {len(folds)} folds ===\n")
-
-    songs_seen_total = 0
-    for fold_index, fold in enumerate(folds):
-        print(f"--- Fold {fold_index} ({len(fold)} songs) ---")
-
-        # Count how many songs of each category landed in this fold
-        counts_in_fold: dict[str, int] = {}
-        for category, _lyric in fold:
-            counts_in_fold[category] = counts_in_fold.get(category, 0) + 1
-
-        for category, count in counts_in_fold.items():
-            proportion = count / len(fold)
-            print(f"  {category}: {count} songs ({proportion:.1%})")
-
-        songs_seen_total += len(fold)
-        print()
-
-    print("=== Sanity checks ===")
-    print(f"Sum of all fold sizes: {songs_seen_total} (should equal original total: {total_songs})")
-    print(f"Match: {songs_seen_total == total_songs}")
-
