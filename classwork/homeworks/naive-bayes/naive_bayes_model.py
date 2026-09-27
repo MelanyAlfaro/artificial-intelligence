@@ -11,9 +11,9 @@ class NaiveBayesModel:
   ):
     # {word: {category: probability}}
     cat_to_training_sets = self._map_training_sets_to_categories(training_sets)
-    self._vocabulary: set[str] = extract_vocabulary(bags)
     bags: dict[Category, dict[str, int]] = create_bag_of_words(training_sets)
 
+    self._vocabulary: set[str] = extract_vocabulary(bags)
     self._likelihood_logs: dict[str, dict[Category, float]] = {}
     self._categories: set[Category] = {}
     self._categories.add(cat for cat in bags.keys())
