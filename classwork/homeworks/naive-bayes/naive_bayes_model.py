@@ -1,5 +1,6 @@
-from collections import defaultdict
 import math
+from collections import defaultdict
+
 
 def map_lyrics_to_categories(
   lyrics: list[tuple[str, str]]
@@ -75,7 +76,7 @@ def count_words_per_category(bags: dict[str, dict[str, int]]) -> dict[str, int]:
   Returns:
     dict[str, int]: Categories associated to the amount of words they have
   """
-  category_to_word_counts: dict[str, int] = dict()
+  category_to_word_counts: dict[str, int] = {}
   
   # For each category
   for category, bag in bags.items():
@@ -124,13 +125,13 @@ def classify_with_bayes(
     test_set (str): The sentence to classify. Must be normalized before passing to the function
 
   Returns:
-    tuple[str, float]: Name of the class that the test set is classified to and the calculated probability
+    tuple[str, float]: Name of the class that the test set is classified to and the calculated probability (log score)
   """
   # First remove unknown words to clean
   processed_test_set: list[str] = process_test_set(test_set, vocabulary)
   
   # Stores the likelihood of the test set per category for final decision
-  category_to_likelihood: dict[str, float] = dict()
+  category_to_score: dict[str, float] = {}
     
   # Calculate prior probabilities per category
   priors: dict[str, float] = calculate_priors(category_to_lyrics)
@@ -139,8 +140,7 @@ def classify_with_bayes(
   category_to_word_counts: dict[str, int] = count_words_per_category(bags)
   
   # Calculate likelihoods of the test set per category
-  for current_category in bags:
-    current_bag = bags[current_category]
+  for current_category, current_bag in bags.items():
     current_prior = priors[current_category]
     current_word_count = category_to_word_counts[current_category]
     
@@ -151,12 +151,12 @@ def classify_with_bayes(
       current_likelihood += math.log(likelihood_laplace_smoothing(word, current_bag, current_word_count, len(vocabulary)))
     
     # Store final likelihood for current category
-    category_to_likelihood[current_category] = current_likelihood
+    category_to_score[current_category] = current_likelihood
 
   # Select category with highest likelihood
   classified_category = max(
-    category_to_likelihood,
-    key=category_to_likelihood.get
+    category_to_score,
+    key=category_to_score.get
   )
 
-  return classified_category, category_to_likelihood[classified_category]
+  return classified_category, category_to_score[classified_category]
