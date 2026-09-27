@@ -100,6 +100,19 @@ def save_bag_of_words(bags: dict, output_path : str) -> None:
 
 
 if __name__ == "__main__":
-    lyrics = load_lyrics("data/training-lyrics.csv")
+    from sys import argv
+    infile: str
+    outfile: str
+    if len(argv) == 2:
+        infile = argv[1]
+        outfile = infile + ".json"
+    elif len(argv) == 3:
+        infile = argv[1]
+        outfile = argv[2]
+    else:
+        print(f"Usage: {argv[0]} {'{'}input-file{'}'} [output-file]")
+        exit(0)
+
+    lyrics = load_lyrics(infile)
     bags = create_bag_of_words(lyrics)
-    save_bag_of_words(bags, "data/bag_of_words.json")
+    save_bag_of_words(bags, outfile)
