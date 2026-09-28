@@ -175,5 +175,5 @@ if __name__ == "__main__":
   if len(argv) == 2:
     five_cross_fold_validation(argv[1])
   else:
-    print(f"Usage: {argv[0]} {'{'}training-set{'}'}")
-    exit()
+    print(f"Usage: python {argv[0]} {'{'}training-set{'}'}")
+    exit(0)
