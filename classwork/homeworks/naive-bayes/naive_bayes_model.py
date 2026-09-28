@@ -1,7 +1,7 @@
 import math
 from collections import defaultdict
 
-from common import Category
+from common import Category, map_training_sets_to_categories
 from lyrics_preprocessing import create_bag_of_words
 from vocabulary import extract_vocabulary
 
@@ -12,7 +12,7 @@ class NaiveBayesModel:
     training_sets: list[tuple[Category, str]]
   ):
     # {word: {category: probability}}
-    cat_to_training_sets = self._map_training_sets_to_categories(training_sets)
+    cat_to_training_sets = map_training_sets_to_categories(training_sets)
     bags: dict[Category, dict[str, int]] = create_bag_of_words(training_sets)
 
     self._vocabulary: set[str] = extract_vocabulary(bags)
@@ -157,21 +157,3 @@ class NaiveBayesModel:
       return priors
 
 
-  def _map_training_sets_to_categories(
-    self,
-    training_sets: list[tuple[str, str]]
-  ) -> dict[str, list[str]]:
-    """Converts the list of tupled category, training set pairs into a dictionary of category to list of training sets
-
-    Args:
-      training_sets (list[tuple[str, str]]): List of tupled category, training pairs
-
-    Returns:
-      dict[str, list[str]]: The dictionary mapping categories to training sets directly
-    """
-    category_to_training_sets = defaultdict(list)
-
-    for category, training_set in training_sets:
-      category_to_training_sets[category].append(training_set)
-
-    return dict(category_to_training_sets)
