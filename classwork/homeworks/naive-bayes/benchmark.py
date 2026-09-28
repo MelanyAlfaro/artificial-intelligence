@@ -7,6 +7,14 @@ import statistics as stat
 
 
 def show_results(metrics: dict[Category, dict[Metric, float]]) -> None:
+  """
+  Show the results of different metrics. These are printed in a table showing
+  the category, metric type (field), and the value of each one, followed by the
+  avarage of each metric across all categories.
+
+  Args:
+    metrics: The metrics to show.
+  """
   all_metrics: dict[Metric, list[float]] = defaultdict(list[float])
   print()
   print(f'{"=" * (30 + len("Results"))}')
@@ -34,6 +42,14 @@ def show_results(metrics: dict[Category, dict[Metric, float]]) -> None:
 
 
 def benchmark(training: str, testing: str) -> None:
+  """
+  Preform benchmarks for acuracy, precision, recall, and f1 stats using naive
+  Bayes on a data set.
+
+  Args:
+    training: The set to train the model.
+    testing: The set to use for the benchmarks.
+  """
   training_lyrics = load_lyrics(training)
   testing_lyrics = load_lyrics(testing)
   model = NaiveBayesModel(training_sets=training_lyrics)
@@ -48,9 +64,13 @@ def benchmark(training: str, testing: str) -> None:
 
 
 if __name__ == "__main__":
+  import sys
   from sys import argv
   if len(argv) == 3:
-    benchmark(argv[1], argv[2])
+    try:
+      benchmark(argv[1], argv[2])
+    except FileNotFoundError as error:
+      print(f"Could not find a file '{error.filename}'")
   else:
-    print(f"Usage: {argv[0]} {'{'}training-set{'}'} {'{'}testing-set{'}'}")
-    exit(0)
+    print(f"Usage: python {argv[0]} {'{'}training-set{'}'} {'{'}testing-set{'}'}")
+    sys.exit(0)
