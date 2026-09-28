@@ -32,20 +32,20 @@ def k_fold_split(
         f"Category '{category}' has only {len(lyrics)} songs, fewer than k={k}."
       )
 
-  # Copy before shuffling, so we don't mutate the caller's list
-  shuffled_lyrics = lyrics[:]
-  random_generator.shuffle(shuffled_lyrics)
+    # Copy before shuffling, so we don't mutate the caller's list
+    shuffled_lyrics = lyrics[:]
+    random_generator.shuffle(shuffled_lyrics)
 
-  fold_size = len(shuffled_lyrics) // k
-  for i in range(k):
-    start_index = i * fold_size
-    # Ensure the last fold takes any remaining lyrics due to integer division
-    end_index = start_index + fold_size if i < k - 1 else len(shuffled_lyrics)
+    fold_size = len(shuffled_lyrics) // k
+    for i in range(k):
+      start_index = i * fold_size
+      # Ensure the last fold takes any remaining lyrics due to integer division
+      end_index = start_index + fold_size if i < k - 1 else len(shuffled_lyrics)
 
-    # For each lyric in the current slice, append it to the corresponding fold
-    # keeping the structure as (category, lyric) tuples
-    for single_lyric in shuffled_lyrics[start_index:end_index]:
-      folds[i].append((category, single_lyric))
+      # For each lyric in the current slice, append it to the corresponding fold
+      # keeping the structure as (category, lyric) tuples
+      for single_lyric in shuffled_lyrics[start_index:end_index]:
+        folds[i].append((category, single_lyric))
 
   return folds
 
